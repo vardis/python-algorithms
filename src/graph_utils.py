@@ -32,7 +32,7 @@ class Graph:
 
 class Digraph(Graph):
     def __init__(self, num_vertex):
-        super().__init__(num_vertex)
+        Graph.__init__(self, num_vertex)
 
     def add_edge(self, v, w):
         assert v < self._num_vertex
@@ -50,12 +50,12 @@ class Digraph(Graph):
 class WeightedDigraph(Graph):
 
     def __init__(self, num_vertex):
-        super().__init__(num_vertex)
+        Graph.__init__(self, num_vertex)
 
     def add_edge(self, u, w):
         raise Exception("weight is mandatory")
 
-    def add_edge(self, u, v, w):
+    def add_weighted_edge(self, u, v, w):
         assert u < self._num_vertex
         assert v < self._num_vertex
         self._vertices[u].append((v, w))
@@ -65,7 +65,7 @@ class WeightedDigraph(Graph):
         rg = Digraph(self._num_vertex)
         for v in range(len(self._vertices)):
             for e in self._vertices[v]:
-                rg.add_edge(e, v)
+                rg.add_weighted_edge(e, v)
         return rg
 
 def load_graph(path, directed=False, zero_based=True):
@@ -96,7 +96,7 @@ def load_weighted_digraph(path):
             (v, w) = (int(v), int(w))
             # data specifies vertices with 1-based indices
             v -= 1
-            g.add_edge(u, v, w)
+            g.add_weighted_edge(u, v, w)
     return g
 
 if __name__ == "__main__":

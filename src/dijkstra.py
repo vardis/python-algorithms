@@ -89,12 +89,12 @@ if __name__ == "__main__":
     # print("Distance: " + str(dsp.distance(i)))
 
     g = WeightedDigraph(5)
-    g.add_edge(0, 1, 1)
-    g.add_edge(0, 2, 2)
-    g.add_edge(2, 3, 1)
-    g.add_edge(1, 3, 1)
-    g.add_edge(3, 4, 4)
-    g.add_edge(2, 4, 2)
+    g.add_weighted_edge(0, 1, 1)
+    g.add_weighted_edge(0, 2, 2)
+    g.add_weighted_edge(2, 3, 1)
+    g.add_weighted_edge(1, 3, 1)
+    g.add_weighted_edge(3, 4, 4)
+    g.add_weighted_edge(2, 4, 2)
 
     spa = DijkstraShortestPath(g, 0)
     assert spa.exists_path(3)
