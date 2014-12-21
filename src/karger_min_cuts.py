@@ -11,7 +11,6 @@ def read_graph():
     g = []
     num_edges = 0
     f = open("kargerMinCuts.txt", "r")
-    # f = open("small.txt", "r")
     for l in f.readlines():
         if len(l) > 0:
             entries = l.split("\t")
@@ -76,22 +75,9 @@ def random_contraction(graph, num_edges):
     vertices = len(g)
     edges = num_edges
 
-    order = [
-        (0,1),
-        (0,4),
-        (0,5),
-        (2,3),
-        (2,6),
-        (2,7)
-    ]
-
-    o = 0
     while vertices > 2:
         edge = random.randint(0, edges - 1)
         u, v = pick_edge(g, edge)
-
-        # u, v = order[o]
-        # o += 1
 
         # merge v into u, so v's adjacency list is removed and u's list is extended
         merge_vertices(g, u, v)

@@ -1,31 +1,8 @@
-__author__ = 'giorgos'
-
-import math
+"""
+An implementation of the top-down variation of Mergesort,
+"""
 import random
-
-def verify_sort(a):
-    for i in range(1, len(a)):
-        if (a[i-1] > a[i]): raise Exception("Sort is invalid")
-
-
-a = [int(1000 * random.random()) for i in range(100000)]
-
-# print a
-
-
-def insertion_sort(arr):
-    for i in range(1, len(arr)):
-        for j in range(i, 0, -1):
-            if arr[j] < arr[j - 1]:
-                arr[j], arr[j - 1] = arr[j - 1], arr[j]
-            else:
-                break
-
-
-# insertion_sort(a)
-# print a
-# verify_sort(a)
-
+import sort_utils
 
 def merge_sort_top_down(arr):
     if len(arr) < 2:
@@ -61,10 +38,7 @@ def merge(arr, aux, lo, mid, hi):
             arr[i] = aux[pa]
             pa += 1
 
-
+a = sort_utils.generate_random_array(10000)
 random.shuffle(a)
-print a
-
 merge_sort_top_down(a)
-print a
-verify_sort(a)
+sort_utils.verify_sort(a)

@@ -25,9 +25,14 @@ class TopologicalSort:
             if not self.visited[v]:
                 self.visited[v] = True
                 self.post_dfs(v)
+        return self.ordering
 
     def post_dfs(self, v):
         for e in self.G.edges(v):
+            # support for weighted digraphs
+            if type(e) is list or type(e) is tuple:
+                e = e[0]
+
             if not self.visited[e]:
                 self.visited[e] = True
                 self.post_dfs(e)
