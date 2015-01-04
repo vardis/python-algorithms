@@ -4,6 +4,9 @@ class RabinKarpSearch:
     It uses rolling hashing to detect possible occurrences of the pattern in an
     efficient manner.
 
+    Uses the Monte Carlo variation in which a match on the hash is considered a
+    match on the pattern.
+
     The running time is O(N + M) where N is the number of keys and M is the length
     of the pattern.
     """
