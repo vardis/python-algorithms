@@ -10,11 +10,6 @@ The following options are considered:
     to a faster execution.
 """
 
-import random
-import math
-
-__author__ = 'giorgos'
-
 import sys
 
 sys.setrecursionlimit(10000)
@@ -50,7 +45,7 @@ def qsort(arr, left, right, pivotStrategy):
         pivot = pivotStrategy(arr, left, right)
         arr[left], arr[pivot] = arr[pivot], arr[left]
 
-        pivot = partition(arr, left, right, pivotStrategy)
+        pivot = partition(arr, left, right)
         comparisons = partition_size - 1
         comparisons += qsort(arr, left, pivot - 1, pivotStrategy)
         comparisons += qsort(arr, pivot + 1, right, pivotStrategy)
@@ -60,33 +55,25 @@ def qsort(arr, left, right, pivotStrategy):
     i: points after the end of the subarray with entries less than the pivot
     j: points at the beginning of the subarray with entries that haven't been examined yet
 """
-def partition(arr, left, right, pivotStrategy):
-    p = pivotStrategy(arr, left, right)
-    pivot = arr[p]
+def partition(arr, left, right):
     pivot = arr[left]
     i = left + 1
     for j in range(left + 1, right + 1):
         if arr[j] < pivot:
             arr[j], arr[i] = arr[i], arr[j]
-            i = i +1
+            i += 1
 
     arr[left], arr[i - 1] = arr[i - 1], arr[left]
     return i - 1
 
-# N = 10
-# a = [int(1000 * random.random()) for i in range(N)]
-
 a = []
-f = open("qsort_input.txt", "r")
+f = open("../data/qsort_input.txt", "r")
 for l in f.readlines():
     if len(l) > 0:
         num = int(l)
         a.append(num)
 
-
-def verify_sort(a):
-    for i in range(1, len(a)):
-        if (a[i-1] > a[i]): raise Exception("Sort is invalid")
+import sort_utils
 
 b = []
 b.extend(a)
@@ -94,19 +81,18 @@ b.extend(a)
 c = []
 c.extend(a)
 
-comps = 0
 comps = qsort(a, 0, len(a) - 1, pickFirstElementAsPivot)
-verify_sort(a)
+sort_utils.verify_sort(a)
 
 print 'a comparisons', comps
 
 b[0], b[-1] = b[-1], b[0]
 comps = qsort(b, 0, len(b) - 1, pickLastElementAsPivot)
-verify_sort(b)
+sort_utils.verify_sort(b)
 print 'b comparisons', comps
 
 p = pickMedianElementAsPivot(c, 0, len(c) - 1)
 c[0], c[p] = c[p], c[0]
 comps = qsort(c, 0, len(c) - 1, pickMedianElementAsPivot)
-verify_sort(c)
+sort_utils.verify_sort(c)
 print 'c comparisons', comps

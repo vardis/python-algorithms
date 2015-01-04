@@ -28,7 +28,6 @@ import priority_queue
 
 
 class DijkstraShortestPath:
-
     def __init__(self, graph, source):
         self.graph = graph
 
@@ -36,11 +35,11 @@ class DijkstraShortestPath:
         self.source = source
 
         # initialise current vertex distances to infinity
-        self.distances = [1e1000 for i in range(graph.V())]
+        self.distances = [1e1000 for _ in range(graph.V())]
 
         # each entry indicates the parent vertex from which we arrived to the current vertex
         # follow the parent links in reverse order to reconstruct the shortest path to any vertex
-        self.parent_chain = [None for i in range(graph.V())]
+        self.parent_chain = [None for _ in range(graph.V())]
 
         # stores the pending edges prioritised by their weight
         self.edges_queue = priority_queue.IndexedPriorityQueue(graph.V())
@@ -50,8 +49,6 @@ class DijkstraShortestPath:
     def _dijkstra(self):
         self.distances[self.source] = 0
         self.edges_queue.insert(self.source, 0)
-        # for e in self.graph.edges(self.source):
-        #     self.edges_queue.insert(e[0], e[1])
 
         while not self.edges_queue.is_empty():
             self._relax_edges(self.edges_queue.del_min()[0])
@@ -82,11 +79,11 @@ class DijkstraShortestPath:
         assert v < len(self.distances)
         return self.parent_chain[v] is not None
 
+
 if __name__ == "__main__":
     graph = load_weighted_digraph('data/dijkstraData.txt')
     dsp = DijkstraShortestPath(graph, 0)
-    print(','.join([str(dsp.distance(i-1)) for i in (7,37,59,82,99,115,133,165,188,197)]))
-    # print("Distance: " + str(dsp.distance(i)))
+    print(','.join([str(dsp.distance(i - 1)) for i in (7, 37, 59, 82, 99, 115, 133, 165, 188, 197)]))
 
     g = WeightedDigraph(5)
     g.add_weighted_edge(0, 1, 1)

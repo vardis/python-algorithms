@@ -68,6 +68,11 @@ class WeightedDigraph(Graph):
                 rg.add_weighted_edge(e, v)
         return rg
 
+    def __str__(self):
+        s = str(self._num_vertex)
+        vs = [str(u) + '-(' + str(w) + ')->' + str(v) for u in range(len(self._vertices)) for (v, w) in self._vertices[u]]
+        return os.linesep.join([s] + vs)
+
 def load_graph(path, directed=False, zero_based=True):
     f = open(path, "r")
     num_vertex = int(f.readline())
@@ -84,28 +89,32 @@ def load_digraph(path, zero_based=True):
     return load_graph(path, True, zero_based)
 
 
-def load_weighted_digraph(path):
+def load_weighted_digraph(path, zero_based=False):
     f = open(path, "r")
     num_vertex = int(f.readline())
     g = WeightedDigraph(num_vertex)
     for ln in f.readlines():
         fields = ln.split()
-        u = int(fields[0]) - 1
+        u = int(fields[0])
+        if not zero_based:
+            u -= 1
+
         for x in fields[1:]:
             (v, w) = x.split(",")
-            (v, w) = (int(v), int(w))
+            (v, w) = (int(v), float(w))
             # data specifies vertices with 1-based indices
-            v -= 1
+            if not zero_based:
+                v -= 1
             g.add_weighted_edge(u, v, w)
     return g
 
 if __name__ == "__main__":
-    g = load_graph("tinyG.txt")
+    g = load_graph("../data/tinyG.txt")
     print(g)
 
-    g = load_digraph("tinySCC.txt")
+    g = load_digraph("../data/tinySCC.txt")
     print(g)
 
-    g = load_digraph("tinySCC.txt")
+    g = load_digraph("../data/tinySCC.txt")
     print(g.reverse())
 

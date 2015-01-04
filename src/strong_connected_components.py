@@ -56,16 +56,14 @@ class SCC:
                 self._marked[v] = True
                 self._count += 1
                 for w in self._G.edges(v):
+                    # support for digraphs
+                    if type(w) is list or type(w) is tuple:
+                        w = w[0]
+
                     stack.append(w)
 
 
     def dfs_post_order(self, v):
-        # self._marked[v] = True
-        # for w in self._reverse.edges(v):
-        #     if not self._marked[w]:
-        #         self.dfs_post_order(w)
-        # self._order.append(v)
-
         stack = [v]
         while len(stack) > 0:
             v = stack.pop()
@@ -77,6 +75,9 @@ class SCC:
                 self._marked[v] = True
                 stack.append(-v)
                 for w in self._reverse.edges(v):
+                    # support for digraphs
+                    if type(w) is list or type(w) is tuple:
+                        w = w[0]
                     stack.append(w)
 
 
