@@ -50,7 +50,7 @@ if __name__ == "__main__":
     text = moby.read()
     substrSearch = RabinKarpSearch()
     while True:
-        pattern = input('Search for text: ')
+        pattern = raw_input('Search for text: ')
         i = substrSearch.contains(text, pattern)
         if i < 0:
             print("Pattern not found")
