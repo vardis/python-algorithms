@@ -21,6 +21,8 @@ already known for reaching v. The vertex s corresponds to the source vertex.
 
 In this implementation the ordered set is maintained by an indexed min priority queue. The keys are the weights
 of the edges and the associated integer corresponds to the vertex index at the arrow of the edge.
+
+The running time of the algorithm is O(ElgV).
 """
 
 from graph_utils import *

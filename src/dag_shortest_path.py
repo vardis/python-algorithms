@@ -5,6 +5,8 @@ The algorithm works by first running a topological sort on the graph and the
 traversing the graph following the sort order.
 At each step we pick a vertex and relax its outgoing edges in a manner similar
 to Dijkstra's algorithm.
+
+The running time of the algorithm is O(V + E).
 """
 import topological_sort
 import graph_cycle
