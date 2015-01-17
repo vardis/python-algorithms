@@ -68,6 +68,14 @@ class WeightedDigraph(Graph):
                 rg.add_weighted_edge(e, v)
         return rg
 
+    def edge_list(self):
+        for v in range(self.V()):
+            edges = self.edges(v)
+            for e in edges:
+                (u, w) = e
+                yield v, u, w
+
+
     def __str__(self):
         s = str(self._num_vertex)
         vs = [str(u) + '-(' + str(w) + ')->' + str(v) for u in range(len(self._vertices)) for (v, w) in self._vertices[u]]
@@ -94,18 +102,18 @@ def load_weighted_digraph(path, zero_based=False):
     num_vertex = int(f.readline())
     g = WeightedDigraph(num_vertex)
     for ln in f.readlines():
-        fields = ln.split()
-        u = int(fields[0])
+        (u, v, w) = ln.split()
+        u = int(u)
         if not zero_based:
             u -= 1
 
-        for x in fields[1:]:
-            (v, w) = x.split(",")
-            (v, w) = (int(v), float(w))
-            # data specifies vertices with 1-based indices
-            if not zero_based:
-                v -= 1
-            g.add_weighted_edge(u, v, w)
+        v = int(v)
+        w = float(w)
+
+        # data specifies vertices with 1-based indices
+        if not zero_based:
+            v -= 1
+        g.add_weighted_edge(u, v, w)
     return g
 
 if __name__ == "__main__":
@@ -117,4 +125,14 @@ if __name__ == "__main__":
 
     g = load_digraph("../data/tinySCC.txt")
     print(g.reverse())
+
+    g = WeightedDigraph(3)
+    g.add_weighted_edge(0, 1, 1.0)
+    g.add_weighted_edge(0, 2, 1.3)
+    g.add_weighted_edge(1, 2, 4.0)
+    g.add_weighted_edge(2, 1, 1.0)
+    g.add_weighted_edge(2, 0, -1.0)
+
+    for e in g.edge_list():
+        print e
 

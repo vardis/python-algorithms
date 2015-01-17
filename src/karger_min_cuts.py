@@ -27,15 +27,14 @@ def read_graph():
     return (g, num_edges)
 
 
-"""
-Picks the nth edge of the graph from its adjacency list representation and returns a tuple of the vertex indices
-for that edge.
-"""
-
 
 def pick_edge(graph, edge):
+    """
+    Picks the nth edge of the graph from its adjacency list representation and returns a tuple of the vertex indices
+    for that edge.
+    """
     accum = 0
-    for i in xrange(len(graph)):
+    for i in range(len(graph)):
         edge_list = graph[i]
         if (accum + len(edge_list)) > edge:
             return i, edge_list[edge - accum]
