@@ -27,14 +27,14 @@ class DirectedCycleDetector:
     def has_cycle(self):
         for v in range(self._G.V()):
             if not self._marked[v]:
-                self.dfs(-1, v)
+                self.dfs(v)
 
             if self.__has_cycle():
                 break
 
         return self.__has_cycle()
 
-    def dfs(self, u, v):
+    def dfs(self, v):
         self._call_stack[v] = True
         self._marked[v] = True
         for w in self._G.edges(v):
