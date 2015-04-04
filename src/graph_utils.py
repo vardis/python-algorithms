@@ -30,6 +30,26 @@ class Graph:
         vs = [str(v) + ' ' + str(w) for v in range(len(self._vertices)) for w in self._vertices[v]]
         return os.linesep.join([s, s2] + vs)
 
+class WeightedGraph(Graph):
+    def __init__(self, num_vertex):
+        Graph.__init__(self, num_vertex)
+
+    def add_weighted_edge(self, u, v, w):
+        assert u < self._num_vertex
+        assert v < self._num_vertex
+        self._vertices[u].append((v, w))
+        self._vertices[v].append((u, w))
+        self._num_edges += 2
+
+    def add_edge(self, u, w):
+        raise Exception("weight is mandatory")
+
+    def __str__(self):
+        s = str(self._num_vertex)
+        vs = [str(u) + ' ' + str(v) + ' ' + str(w) for u in range(len(self._vertices)) for (v, w) in self._vertices[u]]
+        return os.linesep.join([s] + vs)
+
+
 class Digraph(Graph):
     def __init__(self, num_vertex):
         Graph.__init__(self, num_vertex)
@@ -91,6 +111,22 @@ def load_graph(path, directed=False, zero_based=True):
             v -= 1
             w -= 1
         g.add_edge(v, w)
+    return g
+
+def load_weighted_graph(path, zero_based=True):
+    with open(path, "r") as f:
+        num_vertex = int(f.readline())
+        g = WeightedGraph(num_vertex)
+        for ln in f.readlines():
+            (u, v, w) = ln.split()
+            u = int(u)
+            v = int(v)
+            if not zero_based:
+                u -= 1
+                v -= 1
+            w = float(w)
+
+            g.add_weighted_edge(u, v, w)
     return g
 
 def load_digraph(path, zero_based=True):

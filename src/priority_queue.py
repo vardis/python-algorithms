@@ -39,13 +39,13 @@ class IndexedPriorityQueue:
 
     def swim(self, i):
         p = self._parent(i)
-        while i > 1 and self._key_of(p) > self._key_of(i):
+        while i >= 1 and self._key_of(p) > self._key_of(i):
             self._exchange(p, i)
             i = p
             p //= 2
 
     def sink(self, i):
-        while self._left_child(i) <= self.N:
+        while self._left_child(i) < self.N:
             l, r = self._left_child(i), self._right_child(i)
             min_child = l if (l >= self.N - 1 or self._key_of(l) < self._key_of(r)) else r
             if self._key_of(min_child) < self._key_of(i):
@@ -55,7 +55,14 @@ class IndexedPriorityQueue:
                 return
 
     def insert(self, index, key):
-        assert self.N < self.maxItems
+        assert self.N <= self.maxItems
+        if self.keys[index] is not None:
+            if self.keys[index] < key:
+                self.increase(index, key)
+            else:
+                self.decrease(index, key)
+            return
+
         self.keys[index] = key
         self.heap[self.N] = index
         self.index[index] = self.N
@@ -76,11 +83,12 @@ class IndexedPriorityQueue:
 
         self._exchange(0, self.N - 1)
         self.keys[min_index] = None
-        self.index[min_index] = self.N
+        self.index[min_index] = -1
         # self.heap[self.N] = None
+        self.heap[self.N - 1] = None
         self.N -= 1
 
-        # self.sink(0)
+        self.sink(0)
 
         return (v, k)
 
@@ -91,7 +99,6 @@ class IndexedPriorityQueue:
         return self.keys[self.heap[0]]
 
     def key_of(self, index):
-        assert 0 <= index <= self.N
         assert self.contains(index)
         return self.keys[index]
 
@@ -102,7 +109,7 @@ class IndexedPriorityQueue:
         return self.N == 0
 
     def contains(self, index):
-        return self.keys[index] is not None
+        return index in self.heap
 
 
 class PriorityQueue:
@@ -188,7 +195,7 @@ class PriorityQueue:
             p //= 2
 
     def sink(self, i):
-        while self._left_child(i) <= self.N:
+        while self._left_child(i) < self.N:
             l, r = self._left_child(i), self._right_child(i)
             min_child = l if (l >= self.N - 1 or self.heap[l] < self.heap[r]) else r
             if self.heap[min_child] is not None and self.heap[min_child] < self.heap[i]:
@@ -198,7 +205,7 @@ class PriorityQueue:
                 return
 
     def insert(self, key, val = None):
-        assert self.N < self.maxItems
+        assert self.N <= self.maxItems
         if val is None:
             val = key
         self.values[key] = val
@@ -249,14 +256,26 @@ if __name__ == "__main__":
     assert pq.min_key() == 0.2
     assert pq.min_index() == 2
 
+    pq.insert(4, 0.0)
+    pq.increase(4, 100.0)
+
     i, k = pq.del_min()
     assert k == 0.2 and i == 2
+
+    pq.insert(3, 10.0)
 
     i, k = pq.del_min()
     assert k == 1.0 and i == 0
 
+    pq.decrease(3, 1.0)
+
+    i, k = pq.del_min()
+    assert k == 1.0 and i == 3
+
     i, k = pq.del_min()
     assert k == 1.5 and i == 1
+
+    assert (4, 100.0) == pq.del_min()
 
     assert pq.is_empty()
 
