@@ -11,7 +11,7 @@ class PrimMST:
     def mst(self):
         source = 0
         processed = {source}
-        remaining = set([i for i in range(0, self.graph.V()) if i <> source])
+        remaining = set([i for i in range(0, self.graph.V()) if i != source])
 
         pq = priority_queue.IndexedPriorityQueue(graph.V())
 
@@ -20,6 +20,7 @@ class PrimMST:
 
         while len(remaining) > 0 and pq.size() > 0:
             v, w = pq.del_min()
+
             if v not in processed and v in remaining:
                 # print 'Adding ', v, ' weight ', w
                 self.mst_weight += w
