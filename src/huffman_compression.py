@@ -46,6 +46,8 @@ output.
     At that point we output the character of the leaf to the output
     We reset the tree node back to the root and continue with the rest bits in the input.
 
+This implementation uses the bitarray library from https://pypi.python.org/pypi/bitarray/
+
 """
 from priority_queue import PriorityQueue
 from bitarray import bitarray
