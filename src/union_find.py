@@ -1,5 +1,5 @@
 """
-The UF algorithm provides an efficient way to respond to queries regarding the connectivity between a set of elements.
+The UnionFind data structure provides an efficient way to respond to queries regarding the connectivity between a set of elements.
 
 Connectivity queries and the linkage of the elements is provided through two operations:
     - Find(p) - returns an integer that indicates the connected component in which p belongs
@@ -26,12 +26,23 @@ The root element has the property that array[root] = root.
 However, elements can be linked to their root indirectly through successive union operations. For example an element
 could be initially rooted to element 0 but after a union operation between 0 and 1, the new root is 1. Therefore to
 safely calculate the root of an arbitrary element p we have to follow all the element references in the array until
-we encounter a root element.
+we encounter a root element. In the worst case we will need to traverse up to O(N) links to arrive to the root from
+another random element. We therefore want to minimise the number of steps required to reach the root from any element.
 
-This particular implementation goes by the name of Weighted Quick Union with Path Compression. The term path compression
-refers to the operation of caching the root lookup result for an element whenever the Find operation is called and
-updating the components array with that information. This reduces the lookup time for future Find operations on the
-same element, in the best case from logN down to 1.
+
+
+This particular implementation goes by the name of Union by Rank with Path Compression.
+
+For each root we maintain its rank, the maximum number of links we have to follow from a leaf to reach the root. When
+connecting two roots, we aim to link the root with the smallest rank beneath the root with the higher rank in order
+to minimize the height of the tree. Using this tactic, the height of the tree increases only when merging two roots
+of the same rank. For N elements we can merge two equally-ranked roots up to logN times which places logN as the upper
+bound for the tree's height and therefore the cost of the Find operation. This cost can be reduced even further by
+applying path compression.
+
+The term path compression refers to the operation of caching the root lookup result for an element whenever the
+Find operation is called and updating the components array with that information. This reduces the lookup time for
+future Find operations on the same element, in the best case from logN down to 1.
 
 It provides amortized constant time for both find and union operations.
 
@@ -43,16 +54,15 @@ class UnionFind:
         self.N = max_elements
         self.num_components = self.N
         self.elements = [i for i in range(self.N)]
-        self.root_weights = [1 for _ in range(self.N)]
+        self.ranks = [1 for _ in range(self.N)]
 
     def find(self, p):
         assert 0 <= p < self.N
-        element = p
-        while self.elements[p] != p:
-            p = self.elements[p]
 
-        # cache the root information
-        self.elements[element] = p
+        while self.elements[p] != p:
+            # path compression by directly caching the lookup result in the component array
+            self.elements[p] = self.elements[self.elements[p]]
+            p = self.elements[p]
 
         return p
 
@@ -65,15 +75,16 @@ class UnionFind:
             q_root = self.find(q)
 
             if p_root != q_root:
-                p_root_weight = self.root_weights[p_root]
-                q_root_weight = self.root_weights[q_root]
+                p_rank = self.ranks[p_root]
+                q_rank = self.ranks[q_root]
 
-                if p_root_weight < q_root_weight:
+                if p_rank < q_rank:
                     self.elements[p_root] = q_root
-                    self.root_weights[q_root] += self.root_weights[p_root]
+                elif q_rank < p_rank:
+                    self.elements[q_root] = p_root
                 else:
                     self.elements[q_root] = p_root
-                    self.root_weights[p_root] += self.root_weights[q_root]
+                    self.ranks[p_root] += 1
 
                 self.num_components -= 1
 
@@ -110,3 +121,13 @@ if __name__ == "__main__":
     uf.union(0, 1)
 
     assert uf.count_components() == 1
+
+    with open('../data/mediumUF.txt', 'r') as input_file:
+        N = int(input_file.readline())
+        uf = UnionFind(N)
+
+        for ln in input_file.readlines():
+            p, q = [ int(x) for x in ln.split()]
+            uf.union(p, q)
+
+    print uf.count_components(), ' connected components'
