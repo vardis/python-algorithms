@@ -1,3 +1,26 @@
+"""
+An algorithm that finds a minimum spanning tree, given a graph using greedy
+heuristics. The heuristic in this case being the minimum edge that connects
+the set of already visited vertices to the set of the un-visited vertices.
+
+It is very similar to Dijkstra's shortest-path algorithm. In pseudo-code
+it goes like this:
+
+Prim-MST(G)
+    Select an arbitrary vertex s to start the tree from.
+    While (there are still non-tree vertices)
+        Select the edge of minimum weight between a tree and non-tree vertex
+        Add the selected edge and vertex to the tree Tprim.
+
+The algorithm goes through each of the N vertices and loops all M edges of the vertex.
+This results in O(N*M) complexity
+
+However, using a priority queue to find the minimum crossing edge at each iteration
+of the algorithm reduces the time to O(MlogN)
+
+With N,M being the number of vertices and edges, respectively.
+
+"""
 from graph_utils import *
 import priority_queue
 
