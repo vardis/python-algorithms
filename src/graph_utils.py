@@ -135,7 +135,7 @@ def load_digraph(path, zero_based=True):
 
 def load_weighted_digraph(path, zero_based=False):
     f = open(path, "r")
-    num_vertex = int(f.readline())
+    num_vertex = int(f.readline().split()[0])
     g = WeightedDigraph(num_vertex)
     for ln in f.readlines():
         (u, v, w) = ln.split()
